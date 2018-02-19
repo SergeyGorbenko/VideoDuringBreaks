@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+import sample.Main;
 public class Main extends Application {
 
     @Override
@@ -13,8 +13,9 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("Hello World");
         primaryStage.setScene(new Scene(root));
-        primaryStage.setFullScreen(true);
+       // primaryStage.setFullScreen(true);
         primaryStage.show();
+        Main main = new Main();
     }
 
 
