@@ -27,36 +27,42 @@ public class Controller implements Initializable {
     private Label lable;
     @FXML
     private MediaView mv;
+    private File[] videos = new File("D:/Video/").listFiles();
+    private long time = new Date().getTime()+300_000L;
 
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-        File[] videos = new File("D:/Video/").listFiles();
+    private MediaPlayer getVideo(){
         String vURL = ("file:/"+videos[new Random().nextInt(videos.length)].getAbsolutePath()).replace('\\','/');
-
-        //String vURL = "file:/D:/Video/1.mp4";
         Media media = new Media(vURL);
         MediaPlayer player = new MediaPlayer(media);
         mv.setMediaPlayer(player);
-        player.setOnReady(new Runnable() {
-            @Override
-            public void run() {
-                player.play();
-                currentTimeProperty(player);
-            }
-        });
+        return player;
     }
 
-    private void currentTimeProperty(MediaPlayer player) {
-        SimpleDateFormat tm = new SimpleDateFormat("mm:ss");
-        long time = new Date().getTime()+300_000L;
-
-        player.currentTimeProperty().addListener(new ChangeListener<Duration>() {
-            @Override
-            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-                lable.setText(tm.format((time-(new Date().getTime()))));
-            }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        MediaPlayer video = getVideo();
+        video.setOnReady(()-> {
+                video.play();
+                currentTimeProperty(video);
         });
+
+    }
+
+    private void currentTimeProperty(MediaPlayer video) {
+        SimpleDateFormat tm = new SimpleDateFormat("mm:ss");
+        video.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            Long currentTime = time - (new Date().getTime());
+            if(currentTime > 0 && currentTime < 500)
+                video.stop();
+            lable.setText(tm.format(currentTime));
+            video.setOnEndOfMedia(()-> {
+                    video.stop();
+                    initialize(null,null);
+            });
+
+            });
+
+
+
     }
 }
