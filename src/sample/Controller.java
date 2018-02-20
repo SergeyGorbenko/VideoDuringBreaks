@@ -41,6 +41,9 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+//        for(int  i = 0;i < videos.length;i++){
+//
+//        }
         String vURL = ("file:/"+videos[new Random().nextInt(videos.length)].getAbsolutePath()).replace('\\','/');
         Media media = new Media(vURL);
         MediaPlayer video = new MediaPlayer(media);
