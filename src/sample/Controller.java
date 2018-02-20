@@ -51,8 +51,8 @@ public class Controller implements Initializable {
                 System.out.println(partTime);
                 mv.setVisible(false);
                 setInfo();
-          //  iv.setVisible(false);
                 video.play();
+                video.setVolume(0);
                 currentTimeProperty(video);
         });
 
@@ -63,22 +63,30 @@ public class Controller implements Initializable {
 
         video.currentTimeProperty().addListener((observable, oldValue, newValue) -> {
             Long currentTime = time - (new Date().getTime());
-            video.setOnEndOfMedia(() -> {
-                    video.seek(new Duration(0));
-                    video.play();
-
-            });
-            if(currentTime > 300_000L-partTime-500 && currentTime < 300_000L-partTime+500) {
-                iv.setVisible(false);
-                mv.setVisible(true);
+            if(currentTime > -500 && currentTime < 500) {
+                video.stop();
+                System.exit(0);
             }
-            if(currentTime > partTime - 500 && currentTime <  partTime + 500) {
-                    iv.setVisible(true);
-                    mv.setVisible(false);
-                }
-            lable.setText(tm.format(currentTime));
-
-        });
+            else {
+                    video.setOnEndOfMedia(() -> {
+                        video.seek(new Duration(0));
+                        video.play();
+                        video.setVolume(0);
+                    });
+                    if (currentTime > 300_000L - partTime - 500 && currentTime < 300_000L - partTime + 500) {
+                        iv.setVisible(false);
+                        mv.setVisible(true);
+                        video.seek(new Duration(0));
+                        video.play();
+                        video.setVolume(100);
+                    }
+                    if (currentTime > partTime - 500 && currentTime < partTime + 500) {
+                        iv.setVisible(true);
+                        mv.setVisible(false);
+                    }
+                    lable.setText(tm.format(currentTime));
+            }
+         });
 
 
 
